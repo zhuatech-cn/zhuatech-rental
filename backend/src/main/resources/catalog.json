@@ -1,0 +1,411 @@
+{
+  "slug": "rental",
+  "pkg": "rental",
+  "name": "知华设备租赁管理",
+  "subtitle": "从设备档期、租赁履约到退租结算",
+  "accent": "#24695c",
+  "modules": [
+    {
+      "key": "customers",
+      "label": "客户档案",
+      "description": "客户联系资料与赊欠上限",
+      "initial": "ACTIVE",
+      "editable": true,
+      "creatable": true,
+      "fields": [
+        {
+          "key": "name",
+          "label": "客户名称",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "contact",
+          "label": "联系人",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "creditLimit",
+          "label": "赊欠上限",
+          "type": "money",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": "0",
+          "max": "999999999"
+        }
+      ],
+      "actions": []
+    },
+    {
+      "key": "equipment",
+      "label": "租赁设备",
+      "description": "唯一序列号设备、租金与维修状态",
+      "initial": "AVAILABLE",
+      "editable": true,
+      "creatable": true,
+      "fields": [
+        {
+          "key": "name",
+          "label": "设备名称",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "serial",
+          "label": "设备序列号",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "dailyRate",
+          "label": "日租金",
+          "type": "money",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": "0.01",
+          "max": "999999999"
+        },
+        {
+          "key": "deposit",
+          "label": "押金",
+          "type": "money",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": "0",
+          "max": "999999999"
+        }
+      ],
+      "actions": [
+        {
+          "key": "maintenance",
+          "label": "转入维修",
+          "from": [
+            "AVAILABLE"
+          ],
+          "to": "MAINTENANCE",
+          "role": "OPERATOR",
+          "separate": false,
+          "fields": []
+        },
+        {
+          "key": "restore",
+          "label": "维修完成",
+          "from": [
+            "MAINTENANCE"
+          ],
+          "to": "AVAILABLE",
+          "role": "REVIEWER",
+          "separate": true,
+          "fields": []
+        }
+      ]
+    },
+    {
+      "key": "contracts",
+      "label": "租赁合同",
+      "description": "占期校验、收款、出库、退租与结清",
+      "initial": "DRAFT",
+      "editable": true,
+      "creatable": true,
+      "fields": [
+        {
+          "key": "customer",
+          "label": "客户",
+          "type": "ref",
+          "required": true,
+          "ref": "customers",
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "equipment",
+          "label": "设备",
+          "type": "ref",
+          "required": true,
+          "ref": "equipment",
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "start",
+          "label": "开始日期",
+          "type": "date",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "end",
+          "label": "结束日期",
+          "type": "date",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        }
+      ],
+      "actions": [
+        {
+          "key": "reserve",
+          "label": "确认档期",
+          "from": [
+            "DRAFT"
+          ],
+          "to": "RESERVED",
+          "role": "REVIEWER",
+          "separate": true,
+          "fields": []
+        },
+        {
+          "key": "receive",
+          "label": "收款登记",
+          "from": [
+            "RESERVED",
+            "ACTIVE",
+            "RETURNED"
+          ],
+          "to": "",
+          "role": "OPERATOR",
+          "separate": false,
+          "fields": [
+            {
+              "key": "amount",
+              "label": "本次收款",
+              "type": "money",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": "0.01",
+              "max": "999999999"
+            },
+            {
+              "key": "reference",
+              "label": "收款凭证号",
+              "type": "text",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": null,
+              "max": null
+            }
+          ]
+        },
+        {
+          "key": "dispatch",
+          "label": "交付出库",
+          "from": [
+            "RESERVED"
+          ],
+          "to": "ACTIVE",
+          "role": "OPERATOR",
+          "separate": false,
+          "fields": []
+        },
+        {
+          "key": "return",
+          "label": "办理退租",
+          "from": [
+            "ACTIVE"
+          ],
+          "to": "RETURNED",
+          "role": "OPERATOR",
+          "separate": false,
+          "fields": [
+            {
+              "key": "returnedAt",
+              "label": "实际归还日期",
+              "type": "date",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": null,
+              "max": null
+            },
+            {
+              "key": "damageFee",
+              "label": "损坏赔偿",
+              "type": "money",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": "0",
+              "max": "999999999"
+            }
+          ]
+        },
+        {
+          "key": "refund",
+          "label": "押金退款",
+          "from": [
+            "RETURNED"
+          ],
+          "to": "RETURNED",
+          "role": "REVIEWER",
+          "separate": true,
+          "fields": [
+            {
+              "key": "amount",
+              "label": "本次退款",
+              "type": "money",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": "0.01",
+              "max": "999999999"
+            },
+            {
+              "key": "reference",
+              "label": "退款凭证号",
+              "type": "text",
+              "required": true,
+              "ref": null,
+              "options": [],
+              "min": null,
+              "max": null
+            }
+          ]
+        },
+        {
+          "key": "settle",
+          "label": "核销结清",
+          "from": [
+            "RETURNED"
+          ],
+          "to": "CLOSED",
+          "role": "REVIEWER",
+          "separate": true,
+          "fields": []
+        },
+        {
+          "key": "cancel",
+          "label": "撤销合同",
+          "from": [
+            "DRAFT",
+            "RESERVED"
+          ],
+          "to": "CANCELLED",
+          "role": "OPERATOR",
+          "separate": false,
+          "fields": []
+        }
+      ]
+    },
+    {
+      "key": "payments",
+      "label": "资金流水",
+      "description": "自动记录收款与退款，可追溯合同",
+      "initial": "POSTED",
+      "editable": false,
+      "creatable": false,
+      "fields": [
+        {
+          "key": "contract",
+          "label": "合同",
+          "type": "ref",
+          "required": true,
+          "ref": "contracts",
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "amount",
+          "label": "金额",
+          "type": "money",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": "0",
+          "max": "999999999"
+        },
+        {
+          "key": "kind",
+          "label": "收支类型",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "reference",
+          "label": "凭证号",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        }
+      ],
+      "actions": []
+    },
+    {
+      "key": "movements",
+      "label": "设备流转",
+      "description": "交付与归还记录",
+      "initial": "POSTED",
+      "editable": false,
+      "creatable": false,
+      "fields": [
+        {
+          "key": "contract",
+          "label": "合同",
+          "type": "ref",
+          "required": true,
+          "ref": "contracts",
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "equipment",
+          "label": "设备",
+          "type": "ref",
+          "required": true,
+          "ref": "equipment",
+          "options": [],
+          "min": null,
+          "max": null
+        },
+        {
+          "key": "kind",
+          "label": "业务类型",
+          "type": "text",
+          "required": true,
+          "ref": null,
+          "options": [],
+          "min": null,
+          "max": null
+        }
+      ],
+      "actions": []
+    }
+  ]
+}

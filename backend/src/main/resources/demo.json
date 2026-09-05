@@ -1,0 +1,93 @@
+[
+  {
+    "op": "create",
+    "as": "customer",
+    "module": "customers",
+    "data": {
+      "name": "上海企业客户",
+      "contact": "采购经理（演示）",
+      "creditLimit": 1000
+    }
+  },
+  {
+    "op": "create",
+    "as": "asset",
+    "module": "equipment",
+    "data": {
+      "name": "工业扫码终端",
+      "serial": "RENT-SN001",
+      "dailyRate": 100,
+      "deposit": 500
+    }
+  },
+  {
+    "op": "create",
+    "as": "contract",
+    "module": "contracts",
+    "data": {
+      "customer": "$customer.id",
+      "equipment": "$asset.id",
+      "start": "$today-2",
+      "end": "$today-1"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "reserve",
+    "data": {},
+    "role": "reviewer"
+  },
+  {
+    "op": "create",
+    "as": "collision",
+    "module": "contracts",
+    "data": {
+      "customer": "$customer.id",
+      "equipment": "$asset.id",
+      "start": "$today-1",
+      "end": "$today"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "receive",
+    "data": {
+      "amount": 700,
+      "reference": "RECEIPT-001"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "dispatch",
+    "data": {}
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "return",
+    "data": {
+      "returnedAt": "$today",
+      "damageFee": 50
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "refund",
+    "data": {
+      "amount": 350,
+      "reference": "REF-001"
+    },
+    "role": "reviewer"
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "settle",
+    "data": {},
+    "role": "reviewer"
+  }
+]

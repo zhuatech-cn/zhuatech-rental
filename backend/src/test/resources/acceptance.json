@@ -1,0 +1,217 @@
+[
+  {
+    "op": "create",
+    "as": "customer",
+    "module": "customers",
+    "data": {
+      "name": "上海企业客户",
+      "contact": "采购经理（演示）",
+      "creditLimit": 1000
+    }
+  },
+  {
+    "op": "create",
+    "as": "asset",
+    "module": "equipment",
+    "data": {
+      "name": "工业扫码终端",
+      "serial": "RENT-SN001",
+      "dailyRate": 100,
+      "deposit": 500
+    }
+  },
+  {
+    "op": "create",
+    "as": "contract",
+    "module": "contracts",
+    "data": {
+      "customer": "$customer.id",
+      "equipment": "$asset.id",
+      "start": "$today-2",
+      "end": "$today-1"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "dispatch",
+    "data": {},
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "reserve",
+    "data": {},
+    "error": 403
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "reserve",
+    "data": {},
+    "role": "reviewer"
+  },
+  {
+    "op": "check",
+    "target": "contract",
+    "expect": {
+      "state": "RESERVED",
+      "data.rent": 200,
+      "data.days": 2
+    }
+  },
+  {
+    "op": "create",
+    "as": "collision",
+    "module": "contracts",
+    "data": {
+      "customer": "$customer.id",
+      "equipment": "$asset.id",
+      "start": "$today-1",
+      "end": "$today"
+    }
+  },
+  {
+    "op": "action",
+    "target": "collision",
+    "action": "reserve",
+    "data": {},
+    "role": "reviewer",
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "asset",
+    "action": "maintenance",
+    "data": {},
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "dispatch",
+    "data": {},
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "receive",
+    "data": {
+      "amount": 800,
+      "reference": "RECEIPT-TOO-MUCH"
+    },
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "receive",
+    "data": {
+      "amount": 700,
+      "reference": "RECEIPT-001"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "dispatch",
+    "data": {}
+  },
+  {
+    "op": "check",
+    "target": "asset",
+    "expect": {
+      "state": "ON_RENT"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "return",
+    "data": {
+      "returnedAt": "$today",
+      "damageFee": 50
+    }
+  },
+  {
+    "op": "check",
+    "target": "contract",
+    "expect": {
+      "data.lateFee": 100,
+      "data.finalCharge": 350
+    }
+  },
+  {
+    "op": "check",
+    "target": "asset",
+    "expect": {
+      "state": "AVAILABLE"
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "settle",
+    "data": {},
+    "role": "reviewer",
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "refund",
+    "data": {
+      "amount": 351,
+      "reference": "REF-TOO-MUCH"
+    },
+    "role": "reviewer",
+    "error": 409
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "refund",
+    "data": {
+      "amount": 350,
+      "reference": "REF-001"
+    },
+    "role": "reviewer"
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "settle",
+    "data": {},
+    "role": "reviewer"
+  },
+  {
+    "op": "check",
+    "target": "contract",
+    "expect": {
+      "state": "CLOSED",
+      "data.refunded": 350
+    }
+  },
+  {
+    "op": "action",
+    "target": "contract",
+    "action": "settle",
+    "data": {},
+    "role": "reviewer",
+    "error": 409
+  },
+  {
+    "op": "count",
+    "module": "payments",
+    "count": 2,
+    "where": {}
+  },
+  {
+    "op": "count",
+    "module": "movements",
+    "count": 2,
+    "where": {}
+  }
+]

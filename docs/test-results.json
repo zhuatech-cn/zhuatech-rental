@@ -1,0 +1,36 @@
+{
+  "company": "上海如静知华信息科技有限公司",
+  "website": "https://www.zhuatech.cn/",
+  "date": "2026-09-05",
+  "project": "zhuatech-rental",
+  "backend": {
+    "project": "rental",
+    "tests": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 8.987,
+    "database": "MySQL 8.4"
+  },
+  "frontend": {
+    "unitTests": 6,
+    "failures": 0,
+    "build": "passed",
+    "npmAuditKnownVulnerabilities": 0
+  },
+  "browser": {
+    "project": "rental",
+    "login": true,
+    "create": true,
+    "reloadPersistence": true,
+    "detail": true,
+    "admin": true,
+    "audit": true,
+    "mobile": true,
+    "pageErrors": 0,
+    "consoleErrors": 0
+  },
+  "businessSteps": 26,
+  "coreModules": 5,
+  "productionCertified": false
+}
