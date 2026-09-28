@@ -1,5 +1,7 @@
 # 知华设备租赁管理
 
+[简体中文](README.md) | [English](README.en.md)
+
 > 设备真正被占用，资金真正能对平。
 
 由 [知华科技（上海如静知华信息科技有限公司）](https://www.zhuatech.cn/) 提供的 Java + H5 前后端分离企业软件社区源码版，数据库为 MySQL。
